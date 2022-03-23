@@ -154,12 +154,14 @@ class dateToWord extends Mode {
 
   void display() {
     background(#538D4E);
+    textSize(50);
     text(text, width/2, 100);
     if (typing.equals("")) {
       String s0 = new String(charsArray[0]);
       String s1 = new String(charsArray[1]);
       String s2 = new String(charsArray[2]);
       String s = String.format("%s /%s /%s", s0, s1, s2);
+      textSize(30);
       text(s, width/2, height/2);
     } else text(typing, width/2, height/2);
   }

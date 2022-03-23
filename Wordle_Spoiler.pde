@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.format.*;
+import java.time.format.DateTimeFormatter;
 
 LocalDate today;
 LocalDate day0;
@@ -29,9 +29,9 @@ void setup() {
   minDiff = thisIndex;
   maxDiff = words.length-thisIndex-1;
   myFormat = DateTimeFormatter.ofPattern("dd MMMM YYYY");
-  modes[0] = new indexToWord("Returns word X\ndays from now");
-  modes[1] = new wordToDate("Enter word,\nreceive date of that word");
-  modes[2] = new dateToWord("Enter date,\nreceive word on that date");
+  modes[0] = new indexToWord("Index");
+  modes[1] = new wordToDate("Word");
+  modes[2] = new dateToWord("Date");
   currentMode = modes[0];
   maxDate = day0.plus(words.length-1, ChronoUnit.DAYS);
 }
