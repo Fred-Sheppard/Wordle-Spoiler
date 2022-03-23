@@ -1,12 +1,23 @@
 class Mode {
 
+  String text;
   String typing;
   boolean clearNextClick;
+
+  Mode(String text) {
+    this.text = text;
+    init();
+  }
 
   void init() {
   }
 
   void display() {
+    background(#538D4E);
+    textSize(50);
+    text(text, width/2, 100);
+    textSize(30);
+    text(typing, width/2, height/2);
   }
 
   void calculate() {
@@ -28,19 +39,14 @@ class Mode {
 
 class indexToWord extends Mode {
 
-  indexToWord() {
-    init();
+  indexToWord(String text) {
+    super(text);
   }
 
   void init() {
     typing = "+";
   }
 
-  void display() {
-    background(150);
-    text("Returns word X\ndays from now", width/2, 100);
-    text(typing, width/2, height/2);
-  }
 
   void calculate() {
     if (backspace()) return;
@@ -70,18 +76,12 @@ class indexToWord extends Mode {
 
 class wordToDate extends Mode {
 
-  wordToDate() {
-    init();
+  wordToDate(String text) {
+    super(text);
   }
 
   void init() {
     typing = "";
-  }
-
-  void display() {
-    background(100);
-    text("Enter word,\nreceive date of that word", width/2, 100);
-    text(typing, width/2, height/2);
   }
 
   void calculate() {
@@ -128,16 +128,17 @@ class wordToDate extends Mode {
 
 class dateToWord extends Mode {
 
-  char[][] charsArray = new char[3][];
+  char[][] charsArray;
   int wordIndex = 0;
   int letterIndex = 0;
   String typing = "";
 
-  dateToWord() {
-    init();
+  dateToWord(String text) {
+    super(text);
   }
 
   void init() {
+    charsArray = new char[3][];
     for (int i = 0; i < charsArray.length; i++) {
       charsArray[i] = new char[2];
     }
@@ -152,13 +153,13 @@ class dateToWord extends Mode {
 
 
   void display() {
-    background(200);
-    text("Enter date,\nreceive word on that date", width/2, 100);
+    background(#538D4E);
+    text(text, width/2, 100);
     if (typing.equals("")) {
       String s0 = new String(charsArray[0]);
       String s1 = new String(charsArray[1]);
       String s2 = new String(charsArray[2]);
-      String s = String.format("%s/%s/%s", s0, s1, s2);
+      String s = String.format("%s /%s /%s", s0, s1, s2);
       text(s, width/2, height/2);
     } else text(typing, width/2, height/2);
   }

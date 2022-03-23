@@ -17,9 +17,10 @@ Mode[] modes = new Mode[3];
 
 void setup() {
   size(500, 500);
+  background(#538D4E);
   textAlign(CENTER, CENTER);
   textSize(30);
-  fill(0);
+  fill(255);
 
   today = LocalDate.now();
   day0 = LocalDate.of(2021, 6, 19);
@@ -28,31 +29,40 @@ void setup() {
   minDiff = thisIndex;
   maxDiff = words.length-thisIndex-1;
   myFormat = DateTimeFormatter.ofPattern("dd MMMM YYYY");
-  modes[0] = new indexToWord();
-  modes[1] = new wordToDate();
-  modes[2] = new dateToWord();
+  modes[0] = new indexToWord("Returns word X\ndays from now");
+  modes[1] = new wordToDate("Enter word,\nreceive date of that word");
+  modes[2] = new dateToWord("Enter date,\nreceive word on that date");
   currentMode = modes[0];
   maxDate = day0.plus(words.length-1, ChronoUnit.DAYS);
 }
 
 void draw() {
-  textAlign(CENTER, CENTER);
   currentMode.display();
-  textAlign(LEFT, TOP);
-  text(modeIndex, 0, 0);
 }
 
 void keyPressed() {
+  if (keyCode == RIGHT) changeMode(true);
+  if (keyCode == LEFT) changeMode(false);
   currentMode.calculate();
 }
 
 void mousePressed() {
   if (mouseButton == RIGHT) {
+    changeMode(true); //Increments mode
+  }
+}
+
+void changeMode(boolean plus) {
+  if (plus) {
     modeIndex++;
     if (modeIndex > modes.length-1) modeIndex = 0;
-    currentMode = modes[modeIndex];
-    currentMode.init();
+  } else {
+   modeIndex--;
+   if (modeIndex < 0) modeIndex = modes.length-1;
   }
+
+  currentMode = modes[modeIndex];
+  currentMode.init();
 }
 
 class IndexOutOfBoundsException extends RuntimeException {
