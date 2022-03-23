@@ -14,10 +14,13 @@ class Mode {
 
   void display() {
     background(#538D4E);
-    textSize(50);
-    text(text, width/2, 100);
-    textSize(30);
+    textSize(50*displayDensity);
+    text(text, width/2, height/4);
+    textSize(30*displayDensity);
     text(typing, width/2, height/2);
+    fill(0, 255, 0);
+    rect(0, 0, width, height/10);
+    fill(255);
   }
 
   void calculate() {
@@ -28,7 +31,7 @@ class Mode {
       typing = "";
       clearNextClick = false;
     }
-    if (key == BACKSPACE && typing.length() > 0 && !typing.equals("+")) {
+    if ((key == BACKSPACE || keyCode == 67) && typing.length() > 0 && !typing.equals("+")) {
       typing = typing.substring(0, typing.length()-1);
       return true;
     }
@@ -54,7 +57,7 @@ class indexToWord extends Mode {
     else if (key >= 48 && key <= 57) {
       if (typing.equals("") && key != '-') typing = "+";
       typing += key;
-    } else if (key == ENTER) {
+    } else if (key == ENTER || keyCode == 66) {
       try {
         typing = toDate(int(typing));
         clearNextClick = true;
@@ -90,7 +93,7 @@ class wordToDate extends Mode {
       if (typing.length() >= 5) return;
       typing += key;
       typing = typing.toUpperCase();
-    } else if (key == ENTER) {
+    } else if (key == ENTER || keyCode == 66) {
       LocalDate date;
       try {
         date = toDate(typing);
@@ -138,6 +141,9 @@ class dateToWord extends Mode {
   }
 
   void init() {
+    typing = "";
+    letterIndex = 0;
+    wordIndex = 0;
     charsArray = new char[3][];
     for (int i = 0; i < charsArray.length; i++) {
       charsArray[i] = new char[2];
@@ -154,22 +160,31 @@ class dateToWord extends Mode {
 
   void display() {
     background(#538D4E);
-    textSize(50);
-    text(text, width/2, 100);
+    textSize(50*displayDensity);
+    text(text, width/2, height/4);
+    float textHeight = textAscent()+textDescent();
+    textSize(30*displayDensity);
+    text(today.format(myFormat), width/2, height/4+textHeight);
     if (typing.equals("")) {
       String s0 = new String(charsArray[0]);
       String s1 = new String(charsArray[1]);
       String s2 = new String(charsArray[2]);
-      String s = String.format("%s /%s /%s", s0, s1, s2);
-      textSize(30);
+      String s = String.format("%s/%s/%s", s0, s1, s2);
+      textSize(40*displayDensity);
       text(s, width/2, height/2);
-    } else text(typing, width/2, height/2);
+    } else {
+      textSize(30*displayDensity);
+      text(typing, width/2, height/2);
+    }
+    fill(0, 255, 0);
+    rect(0, 0, width, height/10);
+    fill(255);
   }
 
   void myCalculate() {
     clearTyping();
     if (letterIndex >= 4) {
-      if (key == ENTER) {
+      if (key == ENTER || keyCode == 66) {
         if (clearNextClick) {
           clearNextClick = false;
           return;
@@ -194,7 +209,7 @@ class dateToWord extends Mode {
           throw new dateOutOfRangeException();
         }
         int index = int(day0.until(date, ChronoUnit.DAYS));
-        typing = words[index];
+        typing = words[index].toUpperCase();
         clearNextClick = true;
       } else return;
     } else if (key >= 48 && key <= 57) {
@@ -230,7 +245,7 @@ class dateToWord extends Mode {
       clearNextClick = false;
       return;
     }
-    if (key == BACKSPACE) {
+    if (key == BACKSPACE || keyCode == 67) {
       if (letterIndex == 0 && wordIndex > 0) {
         letterIndex = 2;
         wordIndex--;

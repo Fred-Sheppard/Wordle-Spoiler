@@ -1,3 +1,6 @@
+boolean isJava = false;
+//float displayDensity = 1;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
@@ -13,13 +16,17 @@ int minDiff, maxDiff;
 Mode currentMode;
 int modeIndex;
 Mode[] modes = new Mode[3];
+boolean keyboard;
 
+void settings() {
+  if (isJava) size(500, 1000);
+  else size(displayWidth, displayHeight);
+}
 
 void setup() {
-  size(500, 500);
   background(#538D4E);
   textAlign(CENTER, CENTER);
-  textSize(30);
+  textSize(30*displayDensity);
   fill(255);
 
   today = LocalDate.now();
@@ -47,8 +54,16 @@ void keyPressed() {
 }
 
 void mousePressed() {
-  if (mouseButton == RIGHT) {
+  if (mouseButton == RIGHT || mouseY < height/10) {
     changeMode(true); //Increments mode
+    return;
+  }
+  if (!keyboard) {
+    openKeyboard();
+    keyboard = true;
+  } else {
+   closeKeyboard();
+   keyboard = false;
   }
 }
 
@@ -57,8 +72,8 @@ void changeMode(boolean plus) {
     modeIndex++;
     if (modeIndex > modes.length-1) modeIndex = 0;
   } else {
-   modeIndex--;
-   if (modeIndex < 0) modeIndex = modes.length-1;
+    modeIndex--;
+    if (modeIndex < 0) modeIndex = modes.length-1;
   }
 
   currentMode = modes[modeIndex];
