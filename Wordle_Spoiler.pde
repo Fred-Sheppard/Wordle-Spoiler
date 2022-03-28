@@ -1,5 +1,5 @@
-boolean isJava = false;
-//float displayDensity = 1;
+boolean isJava = true;
+float displayDensity = 1;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
