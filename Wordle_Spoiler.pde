@@ -1,4 +1,4 @@
-//Now testing for pushing on mobile
+//Test for in-app pull
 
 boolean isJava = true;
 float displayDensity = 1;
