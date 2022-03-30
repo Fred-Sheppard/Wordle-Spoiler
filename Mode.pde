@@ -24,13 +24,9 @@ class Mode {
   }
 
   void calculate() {
-  };
+  }
 
   boolean backspace() {
-    if (clearNextClick) {
-      typing = "";
-      clearNextClick = false;
-    }
     if ((key == BACKSPACE || keyCode == 67) && typing.length() > 0 && !typing.equals("+")) {
       typing = typing.substring(0, typing.length()-1);
       return true;
@@ -53,13 +49,23 @@ class indexToWord extends Mode {
 
   void calculate() {
     if (backspace()) return;
-    if (key == '-') typing = "-";
-    else if (key >= 48 && key <= 57) {
+    if (key == '-') {
+      clearNextClick = false;
+      typing = "-";
+    } else if (key >= 48 && key <= 57) {
+      checkClearNextClick("+");
       if (typing.equals("") && key != '-') typing = "+";
       typing += key;
     } else if (key == ENTER || keyCode == 66) {
+      if (checkClearNextClick("+")) return;
+      if (typing.equals("+") || typing.equals("-")) return;
+      int num = int(typing);
+      if (num < minDiff || num > maxDiff) {
+        typing = new IndexOutOfBoundsException("").getMessage();
+        clearNextClick = true;
+      }
       try {
-        typing = toDate(int(typing));
+        typing = toDate(num);
         clearNextClick = true;
       }
       catch (IndexOutOfBoundsException e) {
@@ -69,31 +75,64 @@ class indexToWord extends Mode {
     }
   }
 
+  boolean checkClearNextClick(String s) {
+    if (clearNextClick) {
+      typing = s;
+      clearNextClick = false;
+      return true;
+    }
+    return false;
+  }
+
   String toDate(int n) {
     int num = thisIndex + n;
     if (num < 0 || num > words.length-1)
       throw new IndexOutOfBoundsException("Index must be between " + minDiff + " & " + maxDiff);
     return words[num].toUpperCase();
   }
+
+  class IndexOutOfBoundsException extends RuntimeException {
+    IndexOutOfBoundsException(String errorMessage) {
+      super(errorMessage);
+    }
+  }
 }
 
 class wordToDate extends Mode {
+
+  int letterIndex;
 
   wordToDate(String text) {
     super(text);
   }
 
   void init() {
-    typing = "";
+    typing = "_____";
   }
 
   void calculate() {
     if (backspace()) return;
     if (key >= 65 && key <= 90 || key >= 97 && key <= 122) {
-      if (typing.length() >= 5) return;
-      typing += key;
+      if (letterIndex >= 5) return;
+      if (clearNextClick) {
+        typing = "_____";
+        letterIndex = 0;
+        clearNextClick = false;
+      }
+      char[] chars = new char[typing.length()];
+      chars = typing.toCharArray();
+      chars[letterIndex] = key;
+      letterIndex++;
+      typing = new String(chars);
       typing = typing.toUpperCase();
     } else if (key == ENTER || keyCode == 66) {
+      if (typing.equals("_____")) return;
+      if (clearNextClick) {
+        typing = "_____";
+        clearNextClick = false;
+        return;
+      }
+      letterIndex = 0;
       LocalDate date;
       try {
         date = toDate(typing);
@@ -110,8 +149,9 @@ class wordToDate extends Mode {
       else str = "Today :)";
       String format = date.format(myFormat);
       typing = format +"\n" + str;
+      letterIndex = 0;
       clearNextClick = true;
-    } else typing = "";
+    } else typing = "_____";
   }
 
   LocalDate toDate(String word) {
@@ -126,6 +166,24 @@ class wordToDate extends Mode {
     }
     if (!exists) throw new WordNotFoundException("Word not found in list");
     return day0.plus(index, ChronoUnit.DAYS);
+  }
+
+  //Returns true on letter deletion
+  boolean backspace() {
+    if ((key == BACKSPACE) && letterIndex > 0) { // || keyCode == 67
+      char[] chars = new char[typing.length()];
+      chars = typing.toCharArray();
+      chars[--letterIndex] = '_';
+      typing = new String(chars);
+      return true;
+    }
+    return false;
+  }
+
+  class WordNotFoundException extends RuntimeException {
+    WordNotFoundException(String errorMessage) {
+      super(errorMessage);
+    }
   }
 }
 

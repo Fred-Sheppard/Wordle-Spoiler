@@ -1,5 +1,3 @@
-//Test for in-app pull
-
 boolean isJava = true;
 float displayDensity = 1;
 
@@ -51,7 +49,9 @@ void draw() {
 
 void keyPressed() {
   if (keyCode == RIGHT) changeMode(true);
-  if (keyCode == LEFT) changeMode(false);
+  else if (keyCode == LEFT) changeMode(false);
+  else if (key == '/') 
+  println(' '); //<>//
   currentMode.calculate();
 }
 
@@ -60,13 +60,13 @@ void mousePressed() {
     changeMode(true); //Increments mode
     return;
   }
-  if (!keyboard) {
-    openKeyboard();
-    keyboard = true;
-  } else {
-   closeKeyboard();
-   keyboard = false;
-  }
+  //if (!keyboard) {
+  //  openKeyboard();
+  //  keyboard = true;
+  //} else {
+  // closeKeyboard();
+  // keyboard = false;
+  //}
 }
 
 void changeMode(boolean plus) {
@@ -82,17 +82,7 @@ void changeMode(boolean plus) {
   currentMode.init();
 }
 
-class IndexOutOfBoundsException extends RuntimeException {
-  IndexOutOfBoundsException(String errorMessage) {
-    super(errorMessage);
-  }
-}
 
-class WordNotFoundException extends RuntimeException {
-  WordNotFoundException(String errorMessage) {
-    super(errorMessage);
-  }
-}
 
 class dateOutOfRangeException extends RuntimeException {
   dateOutOfRangeException() {
