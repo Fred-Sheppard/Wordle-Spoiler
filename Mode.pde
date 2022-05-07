@@ -3,6 +3,7 @@ class Mode {
   String text;
   String typing;
   boolean clearNextClick;
+  boolean displayFileLoaded;
 
   Mode(String text) {
     this.text = text;
@@ -18,9 +19,15 @@ class Mode {
     text(text, width/2, height/4);
     textSize(30*displayDensity);
     text(typing, width/2, height/2);
-    fill(0, 255, 0);
-    rect(0, 0, width, height/10);
-    fill(255);
+    stroke(255);
+    strokeWeight(3);
+    line(width*.9, height*.45, width*.98, height/2);
+    line(width*.9, height*.55, width*.98, height/2);
+    line(width*.1, height*.45, width*.02, height/2);
+    line(width*.1, height*.55, width*.02, height/2);
+
+    ellipse(width/10, height/20, width/10, width/10);
+    if (displayFileLoaded) text("File Updated", width/2, height/10);
   }
 
   void calculate() {
@@ -234,9 +241,14 @@ class dateToWord extends Mode {
       textSize(30*displayDensity);
       text(typing, width/2, height/2);
     }
-    fill(0, 255, 0);
-    rect(0, 0, width, height/10);
-    fill(255);
+    stroke(255);
+    strokeWeight(3);
+    line(width*.9, height*.45, width*.98, height/2);
+    line(width*.9, height*.55, width*.98, height/2);
+    line(width*.1, height*.45, width*.02, height/2);
+    line(width*.1, height*.55, width*.02, height/2);
+
+    ellipse(width/10, height/20, width/10, width/10);
   }
 
   void myCalculate() {

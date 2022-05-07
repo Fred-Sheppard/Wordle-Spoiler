@@ -1,5 +1,5 @@
-boolean isJava = true;
-float displayDensity = 1;
+boolean isJava = false; //<>//
+//float displayDensity = 1;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -50,23 +50,31 @@ void draw() {
 void keyPressed() {
   if (keyCode == RIGHT) changeMode(true);
   else if (keyCode == LEFT) changeMode(false);
-  else if (key == '/') 
-  println(' '); //<>//
+  else if (key == '/')
+    println(' ');
   currentMode.calculate();
 }
 
 void mousePressed() {
-  if (mouseButton == RIGHT || mouseY < height/10) {
+  currentMode.displayFileLoaded = false;
+  float h = height*.05-width*.05;
+  if (mouseX > width*.05 && mouseX < width*.15 && mouseY > h && mouseY < h+width*.1) {
+    thread("fetchList");
+    return;
+  } else if (mouseButton == RIGHT || mouseX > width*9/10) {
     changeMode(true); //Increments mode
     return;
+  } else if (mouseX < width/10) {
+    changeMode(true);
+    return;
   }
-  //if (!keyboard) {
-  //  openKeyboard();
-  //  keyboard = true;
-  //} else {
-  // closeKeyboard();
-  // keyboard = false;
-  //}
+  if (!keyboard) {
+    openKeyboard();
+    keyboard = true;
+  } else {
+   closeKeyboard();
+   keyboard = false;
+  }
 }
 
 void changeMode(boolean plus) {
@@ -82,7 +90,19 @@ void changeMode(boolean plus) {
   currentMode.init();
 }
 
-
+void fetchList() {
+  String[] strings = loadStrings("https://www.nytimes.com/games/wordle/main.af610646.js");
+  PrintWriter output = createWriter("wordle_answers.txt");
+  String list = strings[0].substring(130729, 149200);
+  list = list.replace("\"", "");
+  String[] split = list.split(",");
+  for (String s : split) {
+    output.println(s);
+  }
+  output.flush();
+  output.close();
+  currentMode.displayFileLoaded = true;
+}
 
 class dateOutOfRangeException extends RuntimeException {
   dateOutOfRangeException() {
