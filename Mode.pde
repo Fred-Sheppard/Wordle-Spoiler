@@ -177,7 +177,7 @@ class wordToDate extends Mode {
 
   //Returns true on letter deletion
   boolean backspace() {
-    if ((key == BACKSPACE) && letterIndex > 0) { // || keyCode == 67
+    if ((key == BACKSPACE || keyCode == 67) && letterIndex > 0) { // || keyCode == 67
       char[] chars = new char[typing.length()];
       chars = typing.toCharArray();
       chars[--letterIndex] = '_';

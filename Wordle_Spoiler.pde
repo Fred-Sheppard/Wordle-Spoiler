@@ -1,5 +1,6 @@
 boolean isJava = false; //<>//
 //float displayDensity = 1;
+int mouseButton = 255;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -19,8 +20,8 @@ Mode[] modes = new Mode[3];
 boolean keyboard;
 
 void settings() {
-  if (isJava) size(500, 1000);
-  else size(displayWidth, displayHeight);
+  if (isJava) {size(500, 1000);}
+  else {size(displayWidth, displayHeight);}
 }
 
 void setup() {
@@ -65,7 +66,7 @@ void mousePressed() {
     changeMode(true); //Increments mode
     return;
   } else if (mouseX < width/10) {
-    changeMode(true);
+    changeMode(false);
     return;
   }
   if (!keyboard) {
