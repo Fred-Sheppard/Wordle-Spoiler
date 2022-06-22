@@ -3,7 +3,6 @@ class Mode {
   String text;
   String typing;
   boolean clearNextClick;
-  boolean displayFileLoaded;
 
   Mode(String text) {
     this.text = text;
@@ -27,7 +26,6 @@ class Mode {
     line(width*.1, height*.55, width*.02, height/2);
 
     ellipse(width/10, height/20, width/10, width/10);
-    if (displayFileLoaded) text("File Updated", width/2, height/10);
   }
 
   void calculate() {
@@ -55,7 +53,10 @@ class indexToWord extends Mode {
 
 
   void calculate() {
-    if (backspace()) return;
+    if (backspace()) {
+      checkClearNextClick("+");
+      return;
+    }
     if (key == '-') {
       clearNextClick = false;
       typing = "-";

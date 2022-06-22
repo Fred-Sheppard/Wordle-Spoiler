@@ -1,3 +1,5 @@
+//Todo: check if list update made changes
+
 boolean isJava = false; //<>//
 //float displayDensity = 1;
 int mouseButton = 255;
@@ -5,11 +7,14 @@ int mouseButton = 255;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
+import android.widget.Toast;
+import android.app.Activity;
 
 LocalDate today;
 LocalDate day0;
 LocalDate maxDate;
 DateTimeFormatter myFormat;
+Activity act;
 String[] words;
 String todayWord, thenWord;
 int thisIndex;
@@ -18,6 +23,8 @@ Mode currentMode;
 int modeIndex;
 Mode[] modes = new Mode[3];
 boolean keyboard;
+int fetchTimeout = 10000;
+int fetchTimeStamp;
 
 void settings() {
   if (isJava) {size(500, 1000);}
@@ -25,11 +32,13 @@ void settings() {
 }
 
 void setup() {
+  orientation(PORTRAIT);
   background(#538D4E);
   textAlign(CENTER, CENTER);
   textSize(30*displayDensity);
   fill(255);
 
+  act = this.getActivity();
   today = LocalDate.now();
   day0 = LocalDate.of(2021, 6, 19);
   words = loadStrings("wordle_answers.txt");
@@ -57,7 +66,6 @@ void keyPressed() {
 }
 
 void mousePressed() {
-  currentMode.displayFileLoaded = false;
   float h = height*.05-width*.05;
   if (mouseX > width*.05 && mouseX < width*.15 && mouseY > h && mouseY < h+width*.1) {
     thread("fetchList");
@@ -92,6 +100,7 @@ void changeMode(boolean plus) {
 }
 
 void fetchList() {
+  if (millis() < fetchTimeStamp) return;
   String[] strings = loadStrings("https://www.nytimes.com/games/wordle/main.af610646.js");
   PrintWriter output = createWriter("wordle_answers.txt");
   String list = strings[0].substring(130729, 149200);
@@ -102,11 +111,21 @@ void fetchList() {
   }
   output.flush();
   output.close();
-  currentMode.displayFileLoaded = true;
+  showToast("Updated List");
+  fetchTimeStamp = millis() + fetchTimeout;
 }
 
 class dateOutOfRangeException extends RuntimeException {
   dateOutOfRangeException() {
     super(String.format("Date must be between%n%s & %s", day0.format(myFormat), maxDate.format(myFormat)));
   }
+}
+
+void showToast(final String message) { 
+  act.runOnUiThread(new Runnable() {
+    public void run() { 
+      android.widget.Toast.makeText(act.getApplicationContext(), message, android.widget.Toast.LENGTH_SHORT).show();
+    }
+  }
+  );
 }
