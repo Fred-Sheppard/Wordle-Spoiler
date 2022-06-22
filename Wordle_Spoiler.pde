@@ -114,7 +114,7 @@ void fetchList() {
   showToast("Updated List");
   fetchTimeStamp = millis() + fetchTimeout;
 }
-
+@SuppressWarnings("serial")
 class dateOutOfRangeException extends RuntimeException {
   dateOutOfRangeException() {
     super(String.format("Date must be between%n%s & %s", day0.format(myFormat), maxDate.format(myFormat)));

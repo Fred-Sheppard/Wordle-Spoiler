@@ -30,7 +30,7 @@ class Mode {
 
   void calculate() {
   }
-
+  //Returns true on letter deletion
   boolean backspace() {
     if ((key == BACKSPACE || keyCode == 67) && typing.length() > 0 && !typing.equals("+")) {
       typing = typing.substring(0, typing.length()-1);
@@ -98,7 +98,7 @@ class indexToWord extends Mode {
       throw new IndexOutOfBoundsException("Index must be between " + minDiff + " & " + maxDiff);
     return words[num].toUpperCase();
   }
-
+@SuppressWarnings("serial")
   class IndexOutOfBoundsException extends RuntimeException {
     IndexOutOfBoundsException(String errorMessage) {
       super(errorMessage);
@@ -187,7 +187,7 @@ class wordToDate extends Mode {
     }
     return false;
   }
-
+@SuppressWarnings("serial")
   class WordNotFoundException extends RuntimeException {
     WordNotFoundException(String errorMessage) {
       super(errorMessage);
